@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/IJ"/>
+	<classpathentry kind="lib" path="C:/Program Files/Java/jdk1.8.0_74/lib/tools.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Michael/Documents/local/Fiji.app/jars/mpicbg-1.1.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Michael/Documents/local/Fiji.app/jars/mpicbg-trakem2-1.2.2.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
