@@ -8,5 +8,6 @@
 	<classpathentry kind="lib" path="C:/Users/Michael/Documents/local/Fiji.app/jars/mpicbg-trakem2-1.2.2.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Michael/Documents/local/Fiji.app/jars/imagescience-3.0.0.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Michael/Documents/local/Fiji.app/plugins/FeatureJ_-2.0.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Michael/Documents/local/Fiji.app/plugins/bUnwarpJ_-2.6.3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
