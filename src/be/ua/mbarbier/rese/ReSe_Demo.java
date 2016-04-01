@@ -32,8 +32,8 @@ public class ReSe_Demo implements PlugIn {
 
 	public void scenario_showImage(String arg) {
 
-		File srcFile = new File("c:/Users/Michael/Desktop/demo/input/20.png");
-		File refFile = new File("c:/Users/Michael/Desktop/demo/input/31.png");
+		File srcFile = new File("c:/Users/Michael/Desktop/demo/input/31.png");
+		File refFile = new File("c:/Users/Michael/Desktop/demo/input/20.png");
 		this.source = IJ.openImage( srcFile.getAbsolutePath() );		
 		this.target = IJ.openImage( refFile.getAbsolutePath() );		
 		this.source.show();
@@ -142,14 +142,16 @@ public class ReSe_Demo implements PlugIn {
 		//scaledImp.show();
 		bgMask( this.source );
 		bgMask( this.target );
+		
 		LinkedHashMap<String, Roi> out = LibRegistration.siftSingle( this.source, this.target, LibRegistration.siftParamDefault() );
 		Roi roiSource = out.get("roiSource");
 		Roi roiTarget = out.get("roiTarget");
 		this.source.setRoi(roiSource);
 		this.target.setRoi(roiTarget);
-		Transformation transfo = LibRegistration.bunwarpj_param( this.source, this.target, LibRegistration.bunwarpjParamDefault() );
-		ImagePlus reg = transfo.getDirectResults();
-		reg.show();
+		//Transformation transfo = LibRegistration.bunwarpj_param( this.source, this.target, LibRegistration.bunwarpjParamDefault() );
+		//ImagePlus reg = transfo.getDirectResults();
+		//reg.show();
+
 		//smoothMask( this.source, 4 );
 
 	}
@@ -160,6 +162,7 @@ public class ReSe_Demo implements PlugIn {
 		//scenario_showImage(arg);
 		scenario_PreRegistration(arg);
 	}
+
 
 	public static void main(String[] args) {
 		// set the plugins.dir property to make the plugin appear in the Plugins menu

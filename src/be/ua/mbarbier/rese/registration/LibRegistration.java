@@ -48,9 +48,9 @@ public class LibRegistration {
 	int max_scale_deformation = 2;
 	double divWeight = 0.1;
 	double curlWeight = 0.1;
-	double landmarkWeight = 1.0;
-	double imageWeight = 1.0;
-	double consistencyWeight = 10.0;
+	double landmarkWeight = 0.5;
+	double imageWeight = 0.5;
+	double consistencyWeight = 30.0;
 	double stopThreshold = 0.01;
 
 	public static LinkedHashMap<String, Float> siftParamDefault() {
@@ -75,11 +75,11 @@ public class LibRegistration {
 		paramDefault.put( "img_subsamp_fact", 0.0);
 		paramDefault.put( "min_scale_deformation", 1.0);
 		paramDefault.put( "max_scale_deformation", 2.0);
-		paramDefault.put( "divWeight", 0.0);
-		paramDefault.put( "curlWeight",	0.0);
-		paramDefault.put( "landmarkWeight", 0.0);
-		paramDefault.put( "imageWeight", 1.0);
-		paramDefault.put( "consistencyWeight", 10.0);
+		paramDefault.put( "divWeight", 0.1);
+		paramDefault.put( "curlWeight",	0.1);
+		paramDefault.put( "landmarkWeight", 0.5);
+		paramDefault.put( "imageWeight", 0.5);
+		paramDefault.put( "consistencyWeight", 30.0);
 		paramDefault.put( "stopThreshold", 0.01);
 
 		return paramDefault;
@@ -91,15 +91,15 @@ public class LibRegistration {
 			impTarget, 
 			impSource, 
 			(float) param.get("initialSigma"),
-			(int) (param.get("steps")),
-			(int) (param.get("minOctaveSize")),
-			(int) (param.get("maxOctaveSize")),
-			(int) (param.get("fdSize")),
-			(int) (param.get("fdBins")),
+			new Float((float) param.get("steps")).intValue(),
+			new Float((float) param.get("minOctaveSize")).intValue(),
+			new Float((float) param.get("maxOctaveSize")).intValue(),
+			new Float((float) param.get("fdSize")).intValue(),
+			new Float((float) param.get("fdBins")).intValue(),
 			(float) (param.get("rod")),
 			(float) (param.get("maxEpsilon")),
 			(float) (param.get("minInlierRatio")),
-			(int) (param.get("modelIndex"))
+			new Float((float) param.get("modelIndex")).intValue()
 		);
 		Roi roiSource = impSource.getRoi();
 		Roi roiTarget = impTarget.getRoi();
@@ -126,10 +126,10 @@ public class LibRegistration {
 			impSource, 
 			targetMskIp, 
 			sourceMskIp, 
-			(int) (param.get("accuracy_mode")),
-			(int) (param.get("img_subsamp_fact")),
-			(int) (param.get("min_scale_deformation")),
-			(int) (param.get("max_scale_deformation")),
+			new Double((double) param.get("accuracy_mode")).intValue(),
+			new Double((double) param.get("img_subsamp_fact")).intValue(),
+			new Double((double) param.get("min_scale_deformation")).intValue(),
+			new Double((double) param.get("max_scale_deformation")).intValue(),
 			(double) (param.get("divWeight")),
 			(double) (param.get("curlWeight")),
 			(double) (param.get("landmarkWeight")),
