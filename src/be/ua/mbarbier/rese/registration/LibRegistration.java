@@ -76,9 +76,9 @@ public class LibRegistration {
 		paramDefault.put( "min_scale_deformation", 1.0);
 		paramDefault.put( "max_scale_deformation", 2.0);
 		paramDefault.put( "divWeight", 0.1);
-		paramDefault.put( "curlWeight",	0.1);
-		paramDefault.put( "landmarkWeight", 0.5);
-		paramDefault.put( "imageWeight", 0.5);
+		paramDefault.put( "curlWeight", 0.1);
+		paramDefault.put( "landmarkWeight", 1.0);
+		paramDefault.put( "imageWeight", 0.0);
 		paramDefault.put( "consistencyWeight", 30.0);
 		paramDefault.put( "stopThreshold", 0.01);
 
@@ -113,13 +113,8 @@ public class LibRegistration {
 	public static Transformation bunwarpj_param( ImagePlus impSource, ImagePlus impTarget, LinkedHashMap param ) {
 		impSource.setTitle("bunwarpj_source");
 		impTarget.setTitle("bunwarpj_target");
-		ImageProcessor targetMskIp = LibUtilities.mask( impTarget.getProcessor().duplicate(), 0.0, 0.5 ).getProcessor();
-		ImageProcessor sourceMskIp = LibUtilities.mask( impSource.getProcessor().duplicate(), 0.0, 0.5 ).getProcessor();
-		//FloatProcessor tmp = new FloatProcessor( impTarget.getWidth(), impTarget.getHeight() );
-		//tmp.setValue(1.0);
-		//tmp.fill();
-		//ImageProcessor targetMskIp = tmp.duplicate();
-		//ImageProcessor sourceMskIp = tmp.duplicate();
+		ImageProcessor targetMskIp = null;//LibUtilities.mask( impTarget.getProcessor().duplicate(), 0.0, 0.5 ).getProcessor();
+		ImageProcessor sourceMskIp = null;//LibUtilities.mask( impSource.getProcessor().duplicate(), 0.0, 0.5 ).getProcessor();
 		param = bunwarpjParamDefault();
 		Transformation transfo = bUnwarpJ_.computeTransformationBatch(
 			impTarget, 

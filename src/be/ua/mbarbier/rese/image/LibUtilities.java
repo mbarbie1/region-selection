@@ -3,18 +3,127 @@
  */
 package be.ua.mbarbier.rese.image;
 
+import java.util.ArrayList;
+
 import ij.IJ;
 import ij.ImagePlus;
 import ij.process.ImageProcessor;
 import ij.process.ShortProcessor;
 import ij.process.ShortBlitter;
 import ij.process.ImageStatistics;
+import ij.plugin.CanvasResizer;
 
 /**
  * @author mbarbie1
  *
  */
 public class LibUtilities {
+
+	public static class ImagesResized {
+		ImagePlus imp1;
+		ImagePlus imp2;
+		int[] offset1 = new int[2];
+		int[] offset2 = new int[2];
+		
+		public ImagesResized(ImagePlus imp1, ImagePlus imp2, int newX1, int newY1, int newX2, int newY2) {
+			this.imp1 = imp1;
+			this.imp2 = imp2;
+			this.offset1 = new int[]{newX1, newY1};
+			this.offset2 = new int[]{newX2, newY2};
+		}
+
+		public ImagePlus getImp1() {
+			return imp1;
+		}
+
+		public void setImp1(ImagePlus imp1) {
+			this.imp1 = imp1;
+		}
+
+		public ImagePlus getImp2() {
+			return imp2;
+		}
+
+		public void setImp2(ImagePlus imp2) {
+			this.imp2 = imp2;
+		}
+
+		public int[] getOffset1() {
+			return offset1;
+		}
+
+		public void setOffset1(int[] offset1) {
+			this.offset1 = offset1;
+		}
+
+		public int[] getOffset2() {
+			return offset2;
+		}
+
+		public void setOffset2(int[] offset2) {
+			this.offset2 = offset2;
+		}
+		
+	}
+	
+	public static ImagesResized resizeImages( ImagePlus imp1, ImagePlus imp2 ) {
+
+		int w1 = imp1.getWidth();
+		int w2 = imp2.getWidth();
+		int h1 = imp1.getHeight();
+		int h2 = imp2.getHeight();
+		int newW = Math.max(w1, w2);
+		int newH = Math.max(h1, h2);
+		int newX1 = 0;
+		int newX2 = 0;
+		int newY1 = 0;
+		int newY2 = 0;
+		if (newW > w1) {
+			newX1 = (int) ( Math.round( (newW - w1) / 2.0 ) );
+			newX2 = 0;
+		} else {
+			newX2 = (int) ( Math.round( (newW - w2) / 2.0 ) );
+			newX1 = 0;
+		}
+		if (newH > h1) {
+			newY1 = (int) ( Math.round( (newH - h1) / 2.0 ) );
+			newY2 = 0;
+		} else {
+			newY2 = (int) ( Math.round( (newH - h2) / 2.0 ) );
+			newY1 = 0;
+		}
+
+		CanvasResizer cr = new CanvasResizer();
+		ImagePlus impR1 = new ImagePlus( imp1.getTitle(), cr.expandImage(imp1.getProcessor(), newW, newH, newX1, newY1) );
+		ImagePlus impR2 = new ImagePlus( imp2.getTitle(), cr.expandImage(imp2.getProcessor(), newW, newH, newX2, newY2) );
+
+		return new LibUtilities.ImagesResized( impR1, impR2, newX1, newY1, newX2, newY2 );
+	}
+
+	public ImagesResized resizeImagesBorder( ImagePlus imp1, ImagePlus imp2, int borderWidth ) {
+
+		int w1 = imp1.getWidth();
+		int w2 = imp2.getWidth();
+		int h1 = imp1.getHeight();
+		int h2 = imp2.getHeight();
+		int newW = Math.max(w1, w2) + borderWidth;
+		int newH = Math.max(h1, h2) + borderWidth;
+		int newX1 = 0;
+		int newX2 = 0;
+		int newY1 = 0;
+		int newY2 = 0;
+		newX1 = (int) ( Math.round( (newW - w1) / 2.0 ) );
+		newX2 = (int) ( Math.round( (newW - w2) / 2.0 ) );
+		newY1 = (int) ( Math.round( (newH - h1) / 2.0 ) );
+		newY2 = (int) ( Math.round( (newH - h2) / 2.0 ) );
+
+		CanvasResizer cr = new CanvasResizer();
+		ImagePlus impR1 = new ImagePlus( imp1.getTitle(), cr.expandImage(imp1.getProcessor(), newW, newH, newX1, newY1) );
+		ImagePlus impR2 = new ImagePlus( imp2.getTitle(), cr.expandImage(imp2.getProcessor(), newW, newH, newX2, newY2) );
+
+		return new LibUtilities.ImagesResized( impR1, impR2, newX1, newY1, newX2, newY2 );
+	}
+	
 
 	public static double maskArea( ImageProcessor ip ) {
 		ImageStatistics stats = ip.getStatistics();

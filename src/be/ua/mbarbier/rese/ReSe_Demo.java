@@ -4,9 +4,11 @@ import java.io.File;
 import java.util.LinkedHashMap;
 
 import be.ua.mbarbier.rese.image.LibUtilities;
+import be.ua.mbarbier.rese.image.LibUtilities.ImagesResized;
 import be.ua.mbarbier.rese.registration.LibRegistration;
 import be.ua.mbarbier.rese.statistics.Statistics;
 import bunwarpj.Transformation;
+import ij.CompositeImage;
 import ij.IJ;
 import ij.ImageJ;
 import ij.plugin.*;
@@ -40,6 +42,10 @@ public class ReSe_Demo implements PlugIn {
 		this.target.show();
 	}
 
+	public void resizeImages() {
+		
+	}
+	
 	public ImagePlus scaleImp( ImagePlus imp, int binning) {
 		int newWidth = imp.getWidth() / binning;
 		ImageProcessor ip = imp.getProcessor();
@@ -136,22 +142,37 @@ public class ReSe_Demo implements PlugIn {
 		File refFile = new File("c:/Users/Michael/Desktop/demo/input/31.png");
 		this.source = IJ.openImage( srcFile.getAbsolutePath() );
 		this.target = IJ.openImage( refFile.getAbsolutePath() );
-		this.source.show();
-		this.target.show();
+		//this.source.show();
+		//this.target.show();
 		//ImagePlus scaledImp = scaleImp( this.source, 4);
 		//scaledImp.show();
 		bgMask( this.source );
 		bgMask( this.target );
-		
+		ImagesResized ir = LibUtilities.resizeImages( this.source, this.target );
+		this.source = ir.getImp1();
+		this.target = ir.getImp2();
 		LinkedHashMap<String, Roi> out = LibRegistration.siftSingle( this.source, this.target, LibRegistration.siftParamDefault() );
 		Roi roiSource = out.get("roiSource");
 		Roi roiTarget = out.get("roiTarget");
 		this.source.setRoi(roiSource);
 		this.target.setRoi(roiTarget);
-		//Transformation transfo = LibRegistration.bunwarpj_param( this.source, this.target, LibRegistration.bunwarpjParamDefault() );
-		//ImagePlus reg = transfo.getDirectResults();
-		//reg.show();
+		Transformation transfo = LibRegistration.bunwarpj_param( this.source, this.target, LibRegistration.bunwarpjParamDefault() );
+		ImagePlus reg = transfo.getDirectResults();
+		reg.show();
 
+		int nChannels = 2;  
+		int nSlices = 1; 
+		int nFrames = 1;   
+		ImagePlus impMerged = IJ.createHyperStack("merged", this.target.getWidth(), this.target.getHeight(), 2, 1, 1, this.target.getBitDepth());
+		impMerged.getImageStack().setProcessor(reg.getStack().getProcessor(1).convertToShort(false), 1);
+		impMerged.getImageStack().setProcessor(this.target.getProcessor(), 2);
+		impMerged.setDimensions(nChannels, nSlices, nFrames);  
+		CompositeImage impComp = new CompositeImage(impMerged, CompositeImage.COMPOSITE); 
+		IJ.run(impComp, "Enhance Contrast", "saturated=0.35");
+
+		impComp.show();  
+		
+		
 		//smoothMask( this.source, 4 );
 
 	}
