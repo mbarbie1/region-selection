@@ -194,13 +194,13 @@ public class ReSe_Demo implements PlugIn {
 
 	public void scenario_Manual() {
 		//String sourcePath = "c:/Users/Michael/Desktop/ReSe_Acapella/montages/montage_ch3.png";
-		String sourcePath = "c:/Users/Michael/Desktop/demo/input/31.png";
-		String[] rois = new String[]{"HT","HIP","Cx"};
+		String sourcePath = "c:/Users/Michael/Desktop/demo/input/manual/srcId_1_binning_16.png";
+		String[] rois = new String[]{"Th","Hip","Cx"};
 
 		ImagePlus imp = IJ.openImage( sourcePath );
-		IJ.run(imp, "Enhance Contrast", "saturated=0.35");
 		IJ.setTool(Toolbar.FREEROI);
 		ImageCanvas ic = new ImageCanvas(imp); 
+		IJ.run(imp, "Enhance Contrast", "saturated=0.35");
 		ReSe_Manual mrs = new ReSe_Manual( imp, ic, rois );
 		ic.addMouseListener( mrs.getMl() );
 		mrs.setVisible(true);

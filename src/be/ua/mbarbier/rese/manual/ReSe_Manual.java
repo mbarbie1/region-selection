@@ -1,23 +1,22 @@
 package be.ua.mbarbier.rese.manual;
 
-import java.awt.Menu;
-import java.awt.MenuItem;
+import java.awt.Button;
+import java.awt.Frame;
+import java.awt.GridLayout;
 import java.awt.PopupMenu;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
-import java.io.File;
 
+import be.ua.mbarbier.rese.roi.LibRoi;
 import ij.IJ;
-import ij.ImageJ;
 import ij.ImagePlus;
 import ij.gui.ImageCanvas;
 import ij.gui.ImageWindow;
 import ij.gui.Overlay;
 import ij.gui.Roi;
-import ij.gui.Toolbar;
 
 public class ReSe_Manual extends ImageWindow {
 
@@ -28,10 +27,11 @@ public class ReSe_Manual extends ImageWindow {
 	Roi[] rois;
 	Roi currentRoi;
 	int currentRoiIndex;
+	ImagePlus impOverlay = null;
+	ImagePlus image = null;
+	String outputDir;
+	String inputPath;
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	public ReSe_Manual(String title) {
@@ -59,134 +59,98 @@ public class ReSe_Manual extends ImageWindow {
 	public void windowClosed(WindowEvent e) {
 		System.exit(1);
 	}
-	
-//	@Override
-//	public void mouseReleased(MouseEvent e) {
-//		IJ.log("Mouse released; # of clicks: " + e.getClickCount(), e);
-//	}
-
-
-
-	/**
-	 * 
-	 */
-	public void roiDrawing() {
-		
-	}
-
-	public void roiSelectionDialog() {
-		
-	}
 
 	public class RoiMouseListener implements MouseListener, ActionListener {
-		
-		PopupMenu pm = null;
-		PopupMenu m = null;
-		MenuItem doneItem;
-		MenuItem resetItem;
+
+		Frame f = null;
 		String[] itemList = null;
-		MenuItem[] menuItemList = null;
+		Button doneButton;
+		Button resetButton;
+		Button finishButton;
+		Button[] buttonItemList = null;
 		ReSe_Manual mrs = null;
-		int OFFSET = 10;
-				
+
 		public RoiMouseListener(String[] roiNames, ReSe_Manual mrs) {
 			this.itemList = roiNames;
 			this.mrs = mrs;
-			this.menuItemList = new MenuItem[this.itemList.length];
-			addPanel(this.mrs);
-			m.show( mrs, mrs.ic.getX()-OFFSET, mrs.ic.getY()-OFFSET);
+			this.buttonItemList = new Button[this.itemList.length];
+			addFrame(this.mrs);
+			f.setVisible(true);
 		}
 
-		void addPopupMenu(ReSe_Manual mrs) {
-			if ( pm != null) return;
-			mrs.remove(pm);
-			pm = new PopupMenu();
-			doneItem = new MenuItem("Done");
-			doneItem.addActionListener(this);
-			pm.add(doneItem);
-			resetItem = new MenuItem("Reset");
-			resetItem.addActionListener(this);
-			pm.add(resetItem);
-			pm.addSeparator();
+		void addFrame(ReSe_Manual mrs) {
+
+			this.f = new Frame("Manual ReSe");
+			this.f.setAlwaysOnTop(true);
+			f.setLayout(new GridLayout(0,1));
+			doneButton = new Button("Show");
+			doneButton.addActionListener(this);
+			f.add(doneButton);
+			resetButton = new Button("Reset");
+			resetButton.addActionListener(this);
+			f.add(resetButton);
+			finishButton = new Button("Finish");
+			finishButton.addActionListener(this);
+			f.add(finishButton);
 			for (int i = 0; i < itemList.length; i++ ) {
-				menuItemList[i] = new MenuItem(itemList[i]);
-				menuItemList[i].addActionListener(this);
-				pm.add(menuItemList[i]);
+				buttonItemList[i] = new Button(itemList[i]);
+				buttonItemList[i].addActionListener(this);
+				f.add(buttonItemList[i]);
 			}
-			mrs.add(pm);
+			f.pack();
+			f.setVisible(true);
 		}
-
-		void addPanel( ReSe_Manual mrs) {
-			//if ( m != null) return;
-			//mrs.remove(m);
-			m = new PopupMenu();
-			doneItem = new MenuItem("Done");
-			doneItem.addActionListener(this);
-			m.add(doneItem);
-			resetItem = new MenuItem("Reset");
-			resetItem.addActionListener(this);
-			m.add(resetItem);
-			m.addSeparator();
-			for (int i = 0; i < itemList.length; i++ ) {
-				menuItemList[i] = new MenuItem(itemList[i]);
-				menuItemList[i].addActionListener(this);
-				m.add(menuItemList[i]);
-			}
-			mrs.add(m);
-		}
-
-		
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			IJ.log(e.toString());
 		}
 		@Override
 		public void mouseEntered(MouseEvent e) {
 			mouseInCanvas = true;
-			IJ.log(e.toString());
 		}
 		@Override
 		public void mouseExited(MouseEvent e) {
 			mouseInCanvas = false;
-			IJ.log(e.toString());
 		}
 		@Override
 		public void mousePressed(MouseEvent e) {
-			IJ.log(e.toString());
 		}
 		@Override
 		public void mouseReleased(MouseEvent e) {
-			// TODO Auto-generated method stub
-			IJ.log(e.toString());
-			//int x = e.getXOnScreen();
-			//int y = e.getYOnScreen();
-			//GenericDialog gd = new GenericDialog("Choose a specific ROI or DONE");
-			//gd.setBounds( x, y, gd.getWidth(), gd.getHeight() );
-			//gd.addChoice("ROI", roiNames, roiNames[currentRoiIndex+1]);
-			//gd.showDialog();
-
-			//addPopupMenu(mrs);
-			//pm.show(e.getComponent(), e.getX()+ OFFSET, e.getY()+ OFFSET);
-
 		}
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			System.out.println(e.toString());
-			if ( e.getActionCommand().equals(resetItem.getActionCommand()) ) {
+			if ( e.getActionCommand().equals(finishButton.getActionCommand()) ) {
 				for ( int i = 0; i < itemList.length; i++ ) {
-					menuItemList[ i ].setEnabled(true);
-					rois[i] = null;
-					mrs.imp.setOverlay(null);
+					mrs.impOverlay = LibRoi.getOverlayImage( mrs.rois, mrs.imp );
+					
 				}
+			}
+			if ( e.getActionCommand().equals(resetButton.getActionCommand()) ) {
+				for ( int i = 0; i < itemList.length; i++ ) {
+					buttonItemList[ i ].setEnabled(true);
+					rois[i] = null;
+					mrs.getImagePlus().setOverlay(null);
+					IJ.run( mrs.getImagePlus() , "Select None", "");
+				}
+			}
+			if ( e.getActionCommand().equals(doneButton.getActionCommand()) ) {
+				for ( int i = 0; i < itemList.length; i++ ) {
+					mrs.impOverlay = LibRoi.getOverlayImage( mrs.rois, mrs.imp );
+					IJ.run( mrs.getImagePlus() , "Select None", "");
+				}
+				mrs.setImage(mrs.impOverlay);
 			}
 			for ( int i = 0; i < itemList.length; i++ ) {
 				String s = itemList[i];
 				if (e.getActionCommand().equals(s) ) {
+					IJ.run("Fit Spline");
 					Roi roi = imp.getRoi();
+					roi.setName(s);
 					currentRoiIndex = i;
 					rois[ currentRoiIndex ] = roi;
-					menuItemList[ currentRoiIndex ].setEnabled(false);
+					buttonItemList[ currentRoiIndex ].setEnabled(false);
 					Overlay ol = new Overlay();
 					for ( int j = 0; j < itemList.length; j++ ) {
 						if (rois[ j ] != null ) {
@@ -196,26 +160,6 @@ public class ReSe_Manual extends ImageWindow {
 					mrs.imp.setOverlay( ol );
 				}
 			}
-			//		[e.getActionCommand()];
 		}
 	}
-	
-/*
- * 	public static void main(String[] args) {
-		File sourceFile;
-		String sourcePath = "c:/Users/Michael/Desktop/ReSe_Acapella/montages/montage_ch3.png";
-		String[] rois = new String[]{"HT","HIP","Cx"};
-
-		// start ImageJ
-		new ImageJ();
-
-		ImagePlus imp = IJ.openImage( sourcePath );
-		ImageCanvas ic = new ImageCanvas(imp); 
-		ReSe_Manual mrs = new ReSe_Manual( imp, ic, rois );
-		IJ.setTool(Toolbar.FREEROI);
-		ic.addMouseListener( mrs.getMl() );
-		mrs.setVisible(true);
-	}
-*/
-
 }
