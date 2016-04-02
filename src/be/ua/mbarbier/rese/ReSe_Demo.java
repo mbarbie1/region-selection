@@ -146,19 +146,31 @@ public class ReSe_Demo implements PlugIn {
 		//this.target.show();
 		//ImagePlus scaledImp = scaleImp( this.source, 4);
 		//scaledImp.show();
-		bgMask( this.source );
-		bgMask( this.target );
+		
+		// Resize images to have the same dimensions
 		ImagesResized ir = LibUtilities.resizeImages( this.source, this.target );
 		this.source = ir.getImp1();
 		this.target = ir.getImp2();
+		
+		// Introduce average background signal where there is not signal in the image, 
+		// this is to remove sharp borders for the feature detection
+		bgMask( this.source );
+		bgMask( this.target );
+		
+		// Obtaining SIFT features for the registration
 		LinkedHashMap<String, Roi> out = LibRegistration.siftSingle( this.source, this.target, LibRegistration.siftParamDefault() );
 		Roi roiSource = out.get("roiSource");
 		Roi roiTarget = out.get("roiTarget");
+		// Add SIFT features to the ROIs of the source and target images
 		this.source.setRoi(roiSource);
 		this.target.setRoi(roiTarget);
+		
+		// Elastic registration procedure
 		Transformation transfo = LibRegistration.bunwarpj_param( this.source, this.target, LibRegistration.bunwarpjParamDefault() );
+		
+		
 		ImagePlus reg = transfo.getDirectResults();
-		reg.show();
+		//reg.show();
 
 		int nChannels = 2;  
 		int nSlices = 1; 

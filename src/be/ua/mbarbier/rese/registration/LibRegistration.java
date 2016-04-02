@@ -78,7 +78,7 @@ public class LibRegistration {
 		paramDefault.put( "divWeight", 0.1);
 		paramDefault.put( "curlWeight", 0.1);
 		paramDefault.put( "landmarkWeight", 1.0);
-		paramDefault.put( "imageWeight", 0.0);
+		paramDefault.put( "imageWeight", 1.0);
 		paramDefault.put( "consistencyWeight", 30.0);
 		paramDefault.put( "stopThreshold", 0.01);
 
@@ -115,7 +115,6 @@ public class LibRegistration {
 		impTarget.setTitle("bunwarpj_target");
 		ImageProcessor targetMskIp = null;//LibUtilities.mask( impTarget.getProcessor().duplicate(), 0.0, 0.5 ).getProcessor();
 		ImageProcessor sourceMskIp = null;//LibUtilities.mask( impSource.getProcessor().duplicate(), 0.0, 0.5 ).getProcessor();
-		param = bunwarpjParamDefault();
 		Transformation transfo = bUnwarpJ_.computeTransformationBatch(
 			impTarget, 
 			impSource, 
