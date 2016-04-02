@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 
 import be.ua.mbarbier.rese.image.LibUtilities;
 import be.ua.mbarbier.rese.image.LibUtilities.ImagesResized;
+import be.ua.mbarbier.rese.manual.ReSe_Manual;
 import be.ua.mbarbier.rese.registration.LibRegistration;
 import be.ua.mbarbier.rese.statistics.Statistics;
 import bunwarpj.Transformation;
@@ -19,8 +20,10 @@ import ij.process.ImageProcessor;
 import ij.process.ImageStatistics;
 import ij.ImagePlus;
 import ij.gui.HistogramWindow;
+import ij.gui.ImageCanvas;
 import ij.gui.Plot;
 import ij.gui.Roi;
+import ij.gui.Toolbar;
 import ij.measure.Measurements;
 
 /**
@@ -189,11 +192,26 @@ public class ReSe_Demo implements PlugIn {
 
 	}
 
+	public void scenario_Manual() {
+		//String sourcePath = "c:/Users/Michael/Desktop/ReSe_Acapella/montages/montage_ch3.png";
+		String sourcePath = "c:/Users/Michael/Desktop/demo/input/31.png";
+		String[] rois = new String[]{"HT","HIP","Cx"};
+
+		ImagePlus imp = IJ.openImage( sourcePath );
+		IJ.run(imp, "Enhance Contrast", "saturated=0.35");
+		IJ.setTool(Toolbar.FREEROI);
+		ImageCanvas ic = new ImageCanvas(imp); 
+		ReSe_Manual mrs = new ReSe_Manual( imp, ic, rois );
+		ic.addMouseListener( mrs.getMl() );
+		mrs.setVisible(true);
+	}
+	
 	@Override
 	public void run(String arg) {
 
 		//scenario_showImage(arg);
-		scenario_PreRegistration(arg);
+		//scenario_PreRegistration(arg);
+		scenario_Manual();
 	}
 
 
