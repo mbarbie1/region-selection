@@ -8,6 +8,7 @@ import be.ua.mbarbier.rese.image.LibUtilities.ImagesResized;
 import be.ua.mbarbier.rese.manual.ReSe_Manual;
 import be.ua.mbarbier.rese.registration.LibRegistration;
 import be.ua.mbarbier.rese.statistics.Statistics;
+import be.ua.mbarbier.rese.utilities.text.LibText;
 import bunwarpj.Transformation;
 import ij.CompositeImage;
 import ij.IJ;
@@ -34,6 +35,10 @@ public class ReSe_Demo implements PlugIn {
 
 	ImagePlus source;
 	ImagePlus target;
+	
+	final static String METHOD_MANUAL_REGISTRATION = "manual";
+	final static String METHOD_WARPING = "warping";
+	final static String METHOD_MAP_ATLAS = "atlas";
 
 	public void scenario_showImage(String arg) {
 
@@ -192,17 +197,21 @@ public class ReSe_Demo implements PlugIn {
 
 	}
 
-	public void scenario_Manual() {
+	public void scenario_Manual( String sourcePath, String outputRoiPath, String outputImageOverlayPath ) {
 		//String sourcePath = "c:/Users/Michael/Desktop/ReSe_Acapella/montages/montage_ch3.png";
-		String sourcePath = "c:/Users/Michael/Desktop/demo/input/manual/srcId_1_binning_16.png";
-		String[] rois = new String[]{"Th","Hip","Cx"};
+		//String sourcePath = "c:/Users/Michael/Desktop/demo/input/manual/srcId_1_binning_16.png";
+		String[] rois = new String[]{"Th","Hip","Cx","Md","Bs"};
 
+		//ReSe_Manual mrs = new ReSe_Manual( sourcePath, rois );
+		
 		ImagePlus imp = IJ.openImage( sourcePath );
 		IJ.setTool(Toolbar.FREEROI);
 		ImageCanvas ic = new ImageCanvas(imp); 
 		IJ.run(imp, "Enhance Contrast", "saturated=0.35");
 		ReSe_Manual mrs = new ReSe_Manual( imp, ic, rois );
 		ic.addMouseListener( mrs.getMl() );
+		mrs.setOutputImageOverlayPath(outputImageOverlayPath);
+		mrs.setOutputRoiPath(outputRoiPath);
 		mrs.setVisible(true);
 	}
 	
@@ -211,10 +220,16 @@ public class ReSe_Demo implements PlugIn {
 
 		//scenario_showImage(arg);
 		//scenario_PreRegistration(arg);
-		scenario_Manual();
+		
+		String[] args = arg.split(",");
+		if ( args[0].equals(METHOD_MANUAL_REGISTRATION) ) {
+			for (int i = 0; i < args.length; i++) {
+				System.out.println( args[i] );
+			}
+			scenario_Manual( args[1], args[2], args[3] );
+		}
 	}
-
-
+	
 	public static void main(String[] args) {
 		// set the plugins.dir property to make the plugin appear in the Plugins menu
 		Class<?> clazz = ReSe_Demo.class;
@@ -225,7 +240,20 @@ public class ReSe_Demo implements PlugIn {
 		// start ImageJ
 		new ImageJ();
 
+		// Testing arguments for the Manual registration
+		String outputRoiPath = "c:/Users/Michael/Desktop/demo/output/rois.csv";
+		String outputImageOverlayPath = "c:/Users/Michael/Desktop/demo/output/overlay.png";
+		String sourcePath = "c:/Users/Michael/Desktop/demo/input/manual/srcId_1_binning_16.png";
+		String[] fakeArgs = new String[]{ METHOD_MANUAL_REGISTRATION, sourcePath, outputRoiPath, outputImageOverlayPath }; 
+
 		// run the plugin
-		IJ.runPlugIn(clazz.getName(), "");
+		String arg = LibText.concatenateStringArray( fakeArgs, ",");
+		//IJ.log(arg);
+		//if (args.equals(null)) {
+		//	IJ.log("[0]:" + args[0]);
+		arg = LibText.concatenateStringArray( args, "," );
+		//}
+		//IJ.log(arg);
+		IJ.runPlugIn(clazz.getName(), arg );
 	}
 }

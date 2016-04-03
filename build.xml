@@ -15,13 +15,20 @@
 		</echo>
 	</target>
 	<target name="compress" depends="" description="generate the distribution">
-		<jar jarfile="ReSe_Demo.jar">
+		<jar jarfile="ReSe_Demo3.jar" basedir="bin">
+ 			<manifest>
+				<attribute name="Built-By" value="${user.name}"/>
+		        <attribute name="Main-Class" value="be.ua.mbarbier.rese.ReSe_Demo"/>
+ 			</manifest>
+		</jar>
+		<jar jarfile="ReSe_Demo2.jar">
  			<fileset dir="." includes="plugins.config" />
 			<fileset dir="${build}" includes="**/*.*" />
  			<manifest>
 				<attribute name="Built-By" value="${user.name}"/>
+		        <attribute name="Main-Class" value="be.ua.mbarbier.rese.ReSe_Demo" />
  			</manifest>
 		</jar>
-		<copy file="ReSe_Demo.jar" toDir="${pluginsDir}" />
+		<copy file="ReSe_Demo3.jar" toDir="${pluginsDir}" />
 	</target>
 </project>

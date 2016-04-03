@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="create_run_jar" name="Create Runnable Jar for Project ReSe with Jar-in-Jar Loader">
+    <!--this file was created by Eclipse Runnable JAR file Export Wizard-->
+    <!--ANT 1.7 is required-->
+    <!--define folder properties-->
+    <property name="dir.buildfile" value="."/>
+    <property name="dir.workspace" value="C:/Users/Michael/workspace"/>
+    <property name="dir.jarfile" value="${dir.buildfile}"/>
+    <target name="create_run_jar">
+        <jar destfile="${dir.jarfile}/ReSe_Demo.jar">
+            <manifest>
+                <attribute name="Main-Class" value="org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader"/>
+                <attribute name="Rsrc-Main-Class" value="be.ua.mbarbier.rese.ReSe_Demo"/>
+                <attribute name="Class-Path" value="."/>
+                <attribute name="Rsrc-Class-Path" value="./ tools.jar jama-1.0.3.jar mpicbg-1.1.1.jar mpicbg-trakem2-1.2.2.jar imagescience-3.0.0.jar Image_5D-1.2.6.jar FeatureJ_-2.0.0.jar bUnwarpJ_-2.6.3.jar"/>
+            </manifest>
+            <zipfileset src="jar-in-jar-loader.zip"/>
+            <fileset dir="C:/Users/Michael/git/region-selection/bin"/>
+            <fileset dir="${dir.workspace}/IJ/bin"/>
+            <zipfileset dir="C:/Program Files/Java/jdk1.8.0_74/lib" includes="tools.jar"/>
+            <zipfileset dir="C:/Users/Michael/Documents/local/Fiji.app/jars" includes="jama-1.0.3.jar"/>
+            <zipfileset dir="C:/Users/Michael/Documents/local/Fiji.app/jars" includes="mpicbg-1.1.1.jar"/>
+            <zipfileset dir="C:/Users/Michael/Documents/local/Fiji.app/jars" includes="mpicbg-trakem2-1.2.2.jar"/>
+            <zipfileset dir="C:/Users/Michael/Documents/local/Fiji.app/jars" includes="imagescience-3.0.0.jar"/>
+            <zipfileset dir="C:/Users/Michael/Documents/local/Fiji.app/plugins" includes="Image_5D-1.2.6.jar"/>
+            <zipfileset dir="C:/Users/Michael/Documents/local/Fiji.app/plugins" includes="FeatureJ_-2.0.0.jar"/>
+            <zipfileset dir="C:/Users/Michael/Documents/local/Fiji.app/plugins" includes="bUnwarpJ_-2.6.3.jar"/>
+        </jar>
+    </target>
+</project>

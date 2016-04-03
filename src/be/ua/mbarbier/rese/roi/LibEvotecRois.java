@@ -5,6 +5,8 @@ import java.awt.Polygon;
 import java.io.File;
 import java.util.ArrayList;
 
+import be.ua.mbarbier.rese.utilities.text.LibText;
+
 public class LibEvotecRois {
 
 	/**
@@ -97,10 +99,22 @@ public class LibEvotecRois {
 				text = text + "\t";
 			}
 		}
-	
+		
 		return text;
 	}
 
+	public static String getEvotecRoisRow( float xltUnit, float yltUnit, float xrbUnit, float yrbUnit, int sizeX, int sizeY, Roi[] rois ) {
+		String evotecRoiString;
+		String outString = "";
+		ArrayList<String> row_out = new ArrayList<String>();
+		for (Roi r: rois) {
+			evotecRoiString = roiToEvotecRegion( r, sizeX, sizeY, xltUnit, yltUnit, xrbUnit, yrbUnit );
+			row_out.add( evotecRoiString );
+		}
+		outString = LibText.concatenateStringArray(row_out.toArray(new String[]{""}), "\t");
+		
+		return outString;
+	}
 }
 
 

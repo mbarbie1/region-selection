@@ -10,7 +10,7 @@ import ij.gui.Roi;
 
 public class LibRoi {
 
-	static String EVOTEC_REGION_PREFIX = "EVT_Regions_";
+	final static String EVOTEC_REGION_PREFIX = "EVT_Regions_";
 	
 	public static ImagePlus getOverlayImage( Roi[] rois, ImagePlus imp ) {
 		ImagePlus impRois = new ImagePlus( "Image with rois", imp.getProcessor().duplicate().convertToRGB() );
@@ -21,7 +21,7 @@ public class LibRoi {
 			Color color = roiColor().get( currentRoi.getName() );
 			if (color != null) {} else color = Color.GRAY;
 			currentRoi.setStrokeColor( color );
-			overlay.add( currentRoi );
+			overlay.add( currentRoi, currentRoi.getName() );
 //			overlay.setLabelColor( color );
 //			overlay.setStrokeColor( color ); 
 		}
@@ -41,7 +41,7 @@ public class LibRoi {
 		colors.put( "Hip", Color.green );
 		colors.put( "Th", Color.blue );
 		colors.put( "Bs", Color.magenta );
-		colors.put( "Mb", Color.yellow );
+		colors.put( "Md", Color.yellow );
 		colors.put( "Cb", Color.cyan );
 
 		return colors;
